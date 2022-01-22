@@ -19,7 +19,6 @@ export default async function handler(
   if (address.length > 0) {
     const walletAddress = new PublicKey(address);
     const connection = new Connection(NETWORK);
-    const { Metadata } = programs.metadata;
 
     const getTokensForWallet = async (walletAddress: PublicKey) => {
       const tokens = await connection.getParsedTokenAccountsByOwner(
@@ -36,44 +35,21 @@ export default async function handler(
 
     const tokens = await getTokensForWallet(walletAddress);
 
-    const parsedTokens = await Promise.all(
-      tokens.value.map(async (token) => {
-        const accountInfo = token.account.data.parsed.info;
-        const mintKey = new PublicKey(accountInfo.mint);
+    const parsedTokens = tokens.value.map((token) => {
+      const accountInfo = token.account.data.parsed.info;
+      const mintKey = new PublicKey(accountInfo.mint);
 
-        try {
-          const tokenmetaPubkey = await Metadata.getPDA(mintKey);
-          const metadata = await Metadata.load(connection, tokenmetaPubkey);
+      return {
+        key: mintKey.toString(),
+        amount: parseInt(accountInfo.tokenAmount.uiAmount),
+        decimals: parseInt(accountInfo.tokenAmount.decimals),
+      };
+    });
 
-          return {
-            key: mintKey.toString(),
-            amount: parseInt(accountInfo.tokenAmount.uiAmount),
-            decimals: parseInt(accountInfo.tokenAmount.decimals),
-            metadata,
-          };
-        } catch (e) {
-          return {
-            key: mintKey.toString(),
-            amount: -1,
-            decimals: -1,
-          };
-        }
-      })
+    // TODO: Filter by Fractal IDs
+    const filteredTokens = parsedTokens.filter(
+      (item) => item.amount === 1 && item.decimals === 0
     );
-
-    // Very naively assume that anything that isn't 1 might not be a NFT
-    // so we filter that out
-    const filteredTokens = parsedTokens
-      .filter((item) => item.amount === 1 && item.decimals === 0)
-      .sort((a, b) => {
-        if (a.metadata && b.metadata) {
-          return a.metadata.data.data.name.localeCompare(
-            b.metadata.data.data.name
-          );
-        }
-
-        return 0;
-      });
 
     res.status(200).json(filteredTokens);
   }

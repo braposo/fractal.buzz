@@ -9,10 +9,10 @@ const Home: NextPage = (props) => {
   return (
     <>
       <Head>
-        <title>NextJS Solana Starter Kit</title>
+        <title>Fractal Buzz</title>
         <meta
           name="description"
-          content="Everything you need to start your Solana dApp"
+          content="A social experiment that connects Fractal owners in a series of mini-games"
         />
       </Head>
       <PageContainer>

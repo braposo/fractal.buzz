@@ -1,6 +1,6 @@
 {
-  "name": "nextjs-solana-starter-kit",
-  "description": "Build your own Solana dApp with NextJS and TypeScript",
+  "name": "fractal-buzz",
+  "description": "A social experiment that connects Fractal owners in a series of mini-games",
   "version": "0.1.0",
   "author": {
     "name": "Bernardo Raposo",

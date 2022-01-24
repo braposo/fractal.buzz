@@ -71,7 +71,7 @@ export default async function handler(
             .eq("tokenAddress", token.key);
 
           if (!error && data && data.length === 1) {
-            return data.at(0);
+            return data[0];
           } else {
             return undefined;
           }

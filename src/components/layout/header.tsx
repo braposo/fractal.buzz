@@ -18,7 +18,11 @@ export function Header() {
         <span className="text-lg font-bold">Fractal Buzz</span>
       </div>
       <div className="flex-none">
-        {twitterHandle && <span className="mr-4">@{twitterHandle}</span>}
+        {twitterHandle && (
+          <span className="mr-4">
+            Welcome <strong>@{twitterHandle}</strong>
+          </span>
+        )}
         <WalletMultiButton className="btn btn-ghost" />
       </div>
     </div>

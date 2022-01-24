@@ -1,36 +1,28 @@
 import React from "react";
-import { ItemData } from "@pages/api/items/[address]";
+import { FractalData } from "@pages/api/fractals/[address]";
 import Image from "next/image";
 import { useDataFetch } from "@utils/use-data-fetch";
 import { MetadataJson } from "@metaplex/js";
 
 type Props = {
-  data: ItemData;
+  data: FractalData;
 };
 
 export function Item({ data }: Props) {
-  const name = data.metadata?.data.data.name;
-  const metadataURI = data.metadata?.data.data.uri;
-  const { data: metadata } = useDataFetch<MetadataJson>(
-    metadataURI ? [`/api/metadata?uri=${metadataURI}`, metadataURI] : null
-  );
-
-  const collection = metadata?.collection?.name;
-
+  const buzz = data.power * data.purity;
   return (
-    <div className="card shadow-xl image-full">
-      {metadata && metadata.image && (
-        <figure className="relative h-80">
-          <Image
-            src={metadata.image}
-            alt={`Picture of ${name}`}
-            layout="fill"
-          />
-        </figure>
-      )}
-      <div className="card-body p-4 justify-end text-center">
-        <h2 className="card-title m-0">{name}</h2>
-        {collection && <p>{collection}</p>}
+    <div className="flex flex-row">
+      <div className="grow">
+        <Image
+          src={data.image}
+          alt={`Picture of ${data.tokenAddress}`}
+          width={40}
+          height={40}
+          className="rounded-full"
+        />
+      </div>
+      <div className="flex-none">
+        <strong>{buzz}</strong> Bz
       </div>
     </div>
   );

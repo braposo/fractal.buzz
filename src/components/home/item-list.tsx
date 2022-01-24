@@ -1,9 +1,9 @@
 import { Item } from "@components/home/item";
 import React from "react";
-import { ItemData } from "@pages/api/items/[address]";
+import { FractalData } from "@pages/api/fractals/[address]";
 
 type Props = {
-  items: Array<ItemData> | undefined;
+  items: Array<FractalData> | undefined;
 };
 
 export function ItemList({ items }: Props) {
@@ -12,9 +12,9 @@ export function ItemList({ items }: Props) {
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-flow-row auto-rows-max">
       {items.map((item) => (
-        <Item data={item} key={item.key} />
+        <Item data={item} key={item.tokenAddress} />
       ))}
     </div>
   );

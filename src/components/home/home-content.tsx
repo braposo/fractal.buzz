@@ -1,19 +1,17 @@
 import { useWallet } from "@solana/wallet-adapter-react";
 import React from "react";
 import { useDataFetch } from "@utils/use-data-fetch";
-import { ItemData } from "@pages/api/items/[address]";
+import { FractalData } from "@pages/api/fractals/[address]";
 import { ItemList } from "@components/home/item-list";
-import { SignButton } from "@components/home/sign-button";
-import bs58 from "bs58";
 
 export function HomeContent() {
   const { publicKey } = useWallet();
-  const { data, error } = useDataFetch<Array<ItemData>>(
-    publicKey ? `/api/items/${publicKey}` : null
+  const { data, error } = useDataFetch<Array<FractalData>>(
+    publicKey ? `/api/fractals/${publicKey}` : null
   );
-  const [state, setState] = React.useState<
-    "initial" | "verifying" | "success" | "error"
-  >("initial");
+  const [state, setState] = React.useState<"initial" | "success" | "error">(
+    "initial"
+  );
 
   React.useEffect(() => {
     if (state !== "initial" && !publicKey) {
@@ -46,6 +44,7 @@ export function HomeContent() {
           <div className="card shadow-xl bg-neutral mb-5">
             <div className="card-body ">
               <h2 className="card-title">Fractals buzzing</h2>
+              <ItemList items={data} />
             </div>
           </div>
         </>

@@ -1,18 +1,26 @@
-import { NETWORK } from "@utils/endpoints";
 import type { NextApiRequest, NextApiResponse } from "next";
-
+import { NETWORK } from "@utils/endpoints";
 import { PublicKey } from "@solana/web3.js";
-import { programs, Connection } from "@metaplex/js";
+import { Connection } from "@metaplex/js";
+import { createClient } from "@supabase/supabase-js";
 
-export type ItemData = {
-  key: string;
-  amount: number;
-  metadata?: programs.metadata.Metadata;
+export type FractalData = {
+  tokenAddress: string;
+  faction: string;
+  purity: number;
+  power: number;
+  velocity: number;
+  sping: number;
+  altitude: number;
+  image: string;
 };
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Array<ItemData>>
+  res: NextApiResponse<Array<FractalData>>
 ) {
   const { address } = req.query;
 
@@ -46,12 +54,34 @@ export default async function handler(
       };
     });
 
-    // TODO: Filter by Fractal IDs
-    const filteredTokens = parsedTokens.filter(
+    const nftTokens = parsedTokens.filter(
       (item) => item.amount === 1 && item.decimals === 0
     );
 
-    res.status(200).json(filteredTokens);
+    let fractalTokens: Array<any> = [];
+
+    if (supabaseUrl && supabaseKey && nftTokens.length > 0) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
+      const tokensData = await Promise.all(
+        nftTokens.map(async (token) => {
+          let { data, error } = await supabase
+            .from("fractals")
+            .select("*")
+            .eq("tokenAddress", token.key);
+
+          if (!error && data && data.length === 1) {
+            return data.at(0);
+          } else {
+            return undefined;
+          }
+        })
+      );
+
+      fractalTokens = tokensData.filter(Boolean);
+    }
+
+    res.status(200).json(fractalTokens);
   }
 
   res.status(400);

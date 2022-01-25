@@ -18,10 +18,16 @@ export function Header() {
         <span className="text-lg font-bold">Fractal Buzz</span>
       </div>
       <div className="flex-none">
-        {twitterHandle && (
-          <span className="mr-4">
-            Welcome <strong>@{twitterHandle}</strong>
-          </span>
+        {publicKey ? (
+          twitterHandle && (
+            <span className="mr-4">
+              Welcome <strong>@{twitterHandle}</strong>
+            </span>
+          )
+        ) : (
+          <p className="text-center p-4 col-span-2">
+            Connect your wallet to start buzzing →
+          </p>
         )}
         <WalletMultiButton className="btn btn-ghost" />
       </div>

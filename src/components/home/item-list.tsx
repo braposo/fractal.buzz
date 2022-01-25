@@ -1,6 +1,6 @@
 import { Item } from "@components/home/item";
 import React from "react";
-import { FractalData } from "@pages/api/fractals/[address]";
+import { FractalData } from "@pages/api/fractals/[room]";
 
 type Props = {
   items: Array<FractalData> | undefined;

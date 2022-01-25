@@ -1,5 +1,5 @@
 import React from "react";
-import { FractalData } from "@pages/api/fractals/[address]";
+import { FractalData } from "@pages/api/fractals/[room]";
 import Image from "next/image";
 import { useDataFetch } from "@utils/use-data-fetch";
 import { MetadataJson } from "@metaplex/js";
